@@ -1,9 +1,8 @@
-
 # SlidingWindow
 
-SlidingWindow is a simply sliding window implement for Embedded Systems. Users just need to add files `/sliding_window/include/sliding_window.h `and `/sliding_window/include/sliding_window.c` into their project.
+SlidingWindow is a simply sliding window implement for Embedded Systems. Users just need to add files `/sliding_window/include/sliding_window.h `and `/sliding_window/src/sliding_window.c` into their project.
 
-I use the SlidingWindow in 《GB/T27930-2023》. 
+I use the SlidingWindow in 《GB/T27930-2023》.
 
 # API
 
