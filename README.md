@@ -63,7 +63,7 @@ int32_t sliding_window_cache_count(sliding_window_t window);
  *
  * @param window: sliding window handle
  *
- * @return pending element count
+ * @return await element count
  *         -1: error
  */
 int32_t sliding_window_await_count(sliding_window_t window);
@@ -108,6 +108,8 @@ int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count);
  *
  * @param window: sliding window handle
  * @param element_count: element count to slide
+ *                       possitive: slide forward
+ *                       negative: slide backward
  *
  * @return slide element count
  *         -1: error
@@ -120,6 +122,8 @@ int32_t sliding_window_slide_forward(sliding_window_t window, int32_t element_co
  *
  * @param window: sliding window handle
  * @param element_count: element count to slide
+ *                       possitive: slide forward
+ *                       negative: slide backward
  *
  * @return slide element count
  *         -1: error
