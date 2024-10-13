@@ -8,7 +8,7 @@
 #define SLIDING_WINDOW_MIN(lhs, rhs)     ((lhs) < (rhs) ? (lhs) : (rhs))
 #define SLIDING_WINDOW_MAX(lhs, rhs)     ((lhs) > (rhs) ? (lhs) : (rhs))
 
-void sliding_window_init(sliding_window_t window, void *buffer, uint32_t buffer_size, uint8_t element_size)
+void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_size, uint8_t element_size)
 {
     if (window == NULL || buffer == NULL)
         return;
@@ -67,7 +67,7 @@ int32_t sliding_window_cache_count(sliding_window_t window)
     }
 }
 
-int32_t sliding_window_write(sliding_window_t window, void *element, uint32_t element_count)
+int32_t sliding_window_write(sliding_window_t window, void *element, uint16_t element_count)
 {
     uint16_t ready_to_write; // number of elements ready to be written
     uint16_t available_count;
@@ -107,7 +107,7 @@ int32_t sliding_window_write(sliding_window_t window, void *element, uint32_t el
     return ready_to_write;
 }
 
-int32_t sliding_window_read(sliding_window_t window, void *element, uint32_t element_count)
+int32_t sliding_window_read(sliding_window_t window, void *element, uint16_t element_count)
 {
     uint16_t ready_to_read; // number of elements ready to be read
     uint16_t active_count;
@@ -144,7 +144,30 @@ int32_t sliding_window_read(sliding_window_t window, void *element, uint32_t ele
     return ready_to_read;
 }
 
-int32_t sliding_window_slide(sliding_window_t window, uint32_t element_count)
+int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count)
+{
+    uint16_t cache_count;
+    uint16_t ready_to_drop;
+
+    if (window == NULL)
+        return -1;
+
+    if (element_count == 0)
+        return 0;
+
+    cache_count = sliding_window_cache_count(window);
+    ready_to_drop = SLIDING_WINDOW_MIN(cache_count, element_count);
+
+    if (ready_to_drop == 0)
+        return 0;
+
+    window->front_index += ready_to_drop * window->elememt_size;
+
+    return ready_to_drop;
+}
+
+
+int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count)
 {
     uint16_t active_count;
     uint16_t ready_to_slide;
@@ -166,10 +189,10 @@ int32_t sliding_window_slide(sliding_window_t window, uint32_t element_count)
     return ready_to_slide;
 }
 
-int32_t sliding_window_drop(sliding_window_t window, uint32_t element_count)
+int32_t sliding_window_slide_back(sliding_window_t window, uint16_t element_count)
 {
     uint16_t cache_count;
-    uint16_t ready_to_drop;
+    uint16_t ready_to_slide;
 
     if (window == NULL)
         return -1;
@@ -178,12 +201,13 @@ int32_t sliding_window_drop(sliding_window_t window, uint32_t element_count)
         return 0;
 
     cache_count = sliding_window_cache_count(window);
-    ready_to_drop = SLIDING_WINDOW_MIN(cache_count, element_count);
+    ready_to_slide = SLIDING_WINDOW_MIN(cache_count, element_count);
 
-    if (ready_to_drop == 0)
+    if (ready_to_slide == 0)
         return 0;
 
-    window->front_index += ready_to_drop * window->elememt_size;
+    window->read_index = ((int32_t)window->read_index - ready_to_slide * window->elememt_size + window->buffer_size) % window->buffer_size;
 
-    return ready_to_drop;
+    return ready_to_slide;
 }
+

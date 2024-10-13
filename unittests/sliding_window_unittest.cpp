@@ -80,3 +80,43 @@ TEST(SlidingWindowTest, read_test)
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
 }
 
+TEST(SlidingWindowTest, sliding_test)
+{
+    sliding_window window;
+    sliding_window_init(&window, window_buffer, sizeof(window_buffer), sizeof(uint8_t));
+
+    sliding_window_write(&window, (uint8_t *) "Hello, World!", 13);
+    sliding_window_write(&window, (uint8_t *) "Hello, World!", 13);
+    sliding_window_write(&window, (uint8_t *) "Hello, World!", 13);
+    sliding_window_write(&window, (uint8_t *) "Hello, World!", 13);
+
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 4);
+    sliding_window_slide(&window, 13);
+    sliding_window_slide(&window, 13);
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 2);
+
+    sliding_window_slide_back(&window, 13);
+    sliding_window_slide_back(&window, 13);
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 4);
+
+    sliding_window_slide(&window, 13);
+    sliding_window_slide(&window, 13);
+    sliding_window_slide(&window, 13);
+    sliding_window_drop(&window, 13);
+    sliding_window_drop(&window, 13);
+    sliding_window_drop(&window, 13);
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 1);
+    EXPECT_EQ(sliding_window_cache_count(&window), 0);
+
+    sliding_window_write(&window, (uint8_t *) "Hello, World!", 13);
+    sliding_window_write(&window, (uint8_t *) "Hello, World!", 13);
+    sliding_window_slide(&window, 13);
+    sliding_window_slide(&window, 13);
+    sliding_window_slide(&window, 13);
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 0);
+
+    sliding_window_slide_back(&window, 13);
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 1);
+    sliding_window_slide_back(&window, 13);
+    EXPECT_EQ(sliding_window_active_count(&window), 13 * 2);
+}

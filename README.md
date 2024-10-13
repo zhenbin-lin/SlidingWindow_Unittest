@@ -78,18 +78,6 @@ int32_t sliding_window_write(sliding_window_t window, void *element, uint32_t el
  * @return read element count
  *         -1: error
  */
-int32_t sliding_window_first(sliding_window_t window, void *element);
-
-/**
- * @brief Read element from sliding window
- *
- * @param window: sliding window handle
- * @param element: element to read
- * @param element_count: element count to read
- *
- * @return read element count
- *         -1: error
- */
 int32_t sliding_window_read(sliding_window_t window, void *element, uint32_t element_count);
 
 /**
@@ -104,7 +92,7 @@ int32_t sliding_window_read(sliding_window_t window, void *element, uint32_t ele
 int32_t sliding_window_drop(sliding_window_t window, uint32_t element_count);
 
 /**
- * @brief Slide window
+ * @brief Slide window forward
  *
  * @param window: sliding window handle
  * @param element_count: element count to slide
@@ -112,7 +100,19 @@ int32_t sliding_window_drop(sliding_window_t window, uint32_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide(sliding_window_t window, uint32_t element_count);
+int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count);
+
+
+/**
+ * @brief Slide window backward
+ *
+ * @param window: sliding window handle
+ * @param element_count: element count to slide
+ *
+ * @return slide element count
+ *         -1: error
+ */
+int32_t sliding_window_slide_back(sliding_window_t window, uint16_t element_count);
 
 #ifdef __cplusplus
 }
