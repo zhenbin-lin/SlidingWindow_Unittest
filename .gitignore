@@ -1,0 +1,11 @@
+# Build and Release Folders
+# 忽略构建出来的二进制文件目录
+bin-debug/
+bin-release/
+[Oo]bj/
+[Bb]in/
+build/
+scripts/__pycache__/
+tests/build/
+.vscode/
+.cache/
