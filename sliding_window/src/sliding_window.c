@@ -20,6 +20,7 @@ void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_
     window->read_index = 0;
     window->write_index = 0;
     window->front_index = 0;
+    window->back_index = 0;
 }
 
 int32_t sliding_window_active_count(sliding_window_t window)
@@ -27,13 +28,13 @@ int32_t sliding_window_active_count(sliding_window_t window)
     if (window == NULL)
         return -1;
 
-    if (window->read_index <= window->write_index)
+    if (window->read_index <= window->back_index)
     {
-        return (window->write_index - window->read_index) / window->elememt_size;
+        return (window->back_index - window->read_index) / window->elememt_size;
     }
     else 
     {
-        return (window->buffer_size - window->read_index + window->write_index) / window->elememt_size;
+        return (window->buffer_size - window->read_index + window->back_index) / window->elememt_size;
     }
 }
 
@@ -64,6 +65,21 @@ int32_t sliding_window_cache_count(sliding_window_t window)
     else
     {
         return (window->buffer_size - window->front_index + window->read_index) / window->elememt_size;
+    }
+}
+
+int32_t sliding_window_await_count(sliding_window_t window)
+{
+    if (window == NULL)
+        return -1;
+
+    if (window->back_index <= window->write_index)
+    {
+        return (window->write_index - window->back_index) / window->elememt_size;
+    }
+    else
+    {
+        return (window->buffer_size - window->back_index + window->write_index) / window->elememt_size;
     }
 }
 
@@ -167,8 +183,9 @@ int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count)
 }
 
 
-int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count)
+int32_t sliding_window_slide_forward(sliding_window_t window, int32_t element_count)
 {
+    uint16_t cache_count;
     uint16_t active_count;
     uint16_t ready_to_slide;
 
@@ -178,20 +195,27 @@ int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count)
     if (element_count == 0)
         return 0;
 
-    active_count = sliding_window_active_count(window);
-    ready_to_slide = SLIDING_WINDOW_MIN(active_count, element_count);
-
-    if (ready_to_slide == 0)
-        return 0;
-
-    window->read_index += ready_to_slide * window->elememt_size;
+    if (element_count < 0)
+    {
+        element_count = -element_count;
+        cache_count = sliding_window_cache_count(window);
+        ready_to_slide = SLIDING_WINDOW_MIN(cache_count, element_count);
+        window->read_index = (window->read_index - ready_to_slide * window->elememt_size + window->buffer_size) % window->buffer_size;
+    }
+    else 
+    {
+        active_count = sliding_window_active_count(window);
+        ready_to_slide = SLIDING_WINDOW_MIN(active_count, element_count);
+        window->read_index = (window->read_index + ready_to_slide * window->elememt_size) % window->buffer_size;
+    }
 
     return ready_to_slide;
 }
 
-int32_t sliding_window_slide_back(sliding_window_t window, uint16_t element_count)
+int32_t sliding_window_slide_backward(sliding_window_t window, int32_t element_count)
 {
-    uint16_t cache_count;
+    uint16_t await_count;
+    uint16_t active_count;
     uint16_t ready_to_slide;
 
     if (window == NULL)
@@ -200,13 +224,19 @@ int32_t sliding_window_slide_back(sliding_window_t window, uint16_t element_coun
     if (element_count == 0)
         return 0;
 
-    cache_count = sliding_window_cache_count(window);
-    ready_to_slide = SLIDING_WINDOW_MIN(cache_count, element_count);
-
-    if (ready_to_slide == 0)
-        return 0;
-
-    window->read_index = ((int32_t)window->read_index - ready_to_slide * window->elememt_size + window->buffer_size) % window->buffer_size;
+    if (element_count < 0)
+    {
+        element_count = -element_count;
+        active_count = sliding_window_active_count(window);
+        ready_to_slide = SLIDING_WINDOW_MIN(active_count, element_count);
+        window->back_index = (window->back_index - ready_to_slide * window->elememt_size + window->buffer_size) % window->buffer_size;
+    }
+    else 
+    {
+        await_count = sliding_window_await_count(window);
+        ready_to_slide = SLIDING_WINDOW_MIN(await_count, element_count);
+        window->back_index = (window->back_index + ready_to_slide * window->elememt_size) % window->buffer_size;
+    }
 
     return ready_to_slide;
 }

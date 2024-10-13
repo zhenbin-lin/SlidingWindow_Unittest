@@ -4,6 +4,8 @@ SlidingWindow is a simply sliding window implement for Embedded Systems. Users j
 
 I use the SlidingWindow in 《GB/T27930-2023》.
 
+![1728823505957](image/README/image.png)
+
 # API
 
 ```c
@@ -23,7 +25,7 @@ I use the SlidingWindow in 《GB/T27930-2023》.
  *       eg: uint8_t sliding_window_buffer[element_size * element_count + element_size]
  *           then, actual data number is element_count.
  */
-void sliding_window_init(sliding_window_t window, void *buffer, uint32_t buffer_size, uint8_t element_size);
+void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_size, uint8_t element_size);
 
 /**
  * @brief Get active(readable) element count
@@ -57,6 +59,16 @@ int32_t sliding_window_available_count(sliding_window_t window);
 int32_t sliding_window_cache_count(sliding_window_t window);
 
 /**
+ * @brief Get await(waiting read but current not readable) data count
+ *
+ * @param window: sliding window handle
+ *
+ * @return pending element count
+ *         -1: error
+ */
+int32_t sliding_window_await_count(sliding_window_t window);
+
+/**
  * @brief Write element to sliding window
  *
  * @param window: sliding window handle
@@ -66,7 +78,7 @@ int32_t sliding_window_cache_count(sliding_window_t window);
  * @return write element count
  *         -1: error
  */
-int32_t sliding_window_write(sliding_window_t window, void *element, uint32_t element_count);
+int32_t sliding_window_write(sliding_window_t window, void *element, uint16_t element_count);
 
 /**
  * @brief Read element from sliding window
@@ -78,7 +90,7 @@ int32_t sliding_window_write(sliding_window_t window, void *element, uint32_t el
  * @return read element count
  *         -1: error
  */
-int32_t sliding_window_read(sliding_window_t window, void *element, uint32_t element_count);
+int32_t sliding_window_read(sliding_window_t window, void *element, uint16_t element_count);
 
 /**
  * @brief Drop element from sliding window
@@ -89,7 +101,7 @@ int32_t sliding_window_read(sliding_window_t window, void *element, uint32_t ele
  * @return drop element count
  *         -1: error
  */
-int32_t sliding_window_drop(sliding_window_t window, uint32_t element_count);
+int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count);
 
 /**
  * @brief Slide window forward
@@ -100,7 +112,7 @@ int32_t sliding_window_drop(sliding_window_t window, uint32_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count);
+int32_t sliding_window_slide_forward(sliding_window_t window, int32_t element_count);
 
 
 /**
@@ -112,12 +124,5 @@ int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide_back(sliding_window_t window, uint16_t element_count);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // End of _SLIDING_WINDOW_H_
-
+int32_t sliding_window_slide_backward(sliding_window_t window, int32_t element_count);
 ```

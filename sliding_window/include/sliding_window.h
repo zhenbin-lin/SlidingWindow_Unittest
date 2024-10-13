@@ -17,7 +17,8 @@ typedef struct sliding_window_handle
     uint16_t read_index;
     uint16_t write_index;
 
-    uint8_t  front_index;      // front boundary
+    uint16_t  front_index;  // front boundary
+    uint16_t  back_index;   // back boundary
 } sliding_window, *sliding_window_t;
 
 /**
@@ -70,6 +71,16 @@ int32_t sliding_window_available_count(sliding_window_t window);
 int32_t sliding_window_cache_count(sliding_window_t window);
 
 /**
+ * @brief Get await(waiting read but current not readable) data count
+ *
+ * @param window: sliding window handle
+ *
+ * @return pending element count
+ *         -1: error
+ */
+int32_t sliding_window_await_count(sliding_window_t window);
+
+/**
  * @brief Write element to sliding window
  *
  * @param window: sliding window handle
@@ -80,18 +91,6 @@ int32_t sliding_window_cache_count(sliding_window_t window);
  *         -1: error
  */
 int32_t sliding_window_write(sliding_window_t window, void *element, uint16_t element_count);
-
-/**
- * @brief Read element from sliding window
- *
- * @param window: sliding window handle
- * @param element: element to read
- * @param element_count: element count to read
- *
- * @return read element count
- *         -1: error
- */
-int32_t sliding_window_first(sliding_window_t window, void *element);
 
 /**
  * @brief Read element from sliding window
@@ -125,7 +124,7 @@ int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count);
+int32_t sliding_window_slide_forward(sliding_window_t window, int32_t element_count);
 
 
 /**
@@ -137,7 +136,7 @@ int32_t sliding_window_slide(sliding_window_t window, uint16_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide_back(sliding_window_t window, uint16_t element_count);
+int32_t sliding_window_slide_backward(sliding_window_t window, int32_t element_count);
 
 #ifdef __cplusplus
 }
