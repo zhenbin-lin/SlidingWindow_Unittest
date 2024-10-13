@@ -126,7 +126,7 @@ int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide_forward(sliding_window_t window, int32_t element_count);
+int32_t sliding_window_slide_forward(sliding_window_t window, uint16_t element_count);
 
 
 /**
@@ -140,7 +140,31 @@ int32_t sliding_window_slide_forward(sliding_window_t window, int32_t element_co
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide_backward(sliding_window_t window, int32_t element_count);
+int32_t sliding_window_slide_backward(sliding_window_t window, uint16_t element_count);
+
+/**
+ * @brief Slide window shrink
+ *
+ * @param window: sliding window handle
+ * @param element_count: element count to shrink
+ *                       possitive: forward shrink
+ *                       negative: backward shrink
+ *
+ * @return slide element count
+ *         -1: error
+ */
+int32_t sliding_window_slide_shrink(sliding_window_t window, int32_t element_count);
+
+/**
+ * @brief Slide window dilate
+ *
+ * @param window: sliding window handle
+ * @param element_count: element count to dilate
+ *                       negative: forward dilate
+ *                       possitive: backward dilate
+ */
+int32_t sliding_window_slide_dilate(sliding_window_t window, int32_t element_count);
+
 
 #ifdef __cplusplus
 }
