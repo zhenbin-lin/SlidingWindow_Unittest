@@ -39,6 +39,8 @@ typedef struct sliding_window_handle
  */
 void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_size, uint8_t element_size);
 
+int32_t sliding_window_count(sliding_window_t window);
+
 /**
  * @brief Get active(readable) element count
  *
@@ -126,21 +128,7 @@ int32_t sliding_window_drop(sliding_window_t window, uint16_t element_count);
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide_forward(sliding_window_t window, uint16_t element_count);
-
-
-/**
- * @brief Slide window backward
- *
- * @param window: sliding window handle
- * @param element_count: element count to slide
- *                       possitive: slide forward
- *                       negative: slide backward
- *
- * @return slide element count
- *         -1: error
- */
-int32_t sliding_window_slide_backward(sliding_window_t window, uint16_t element_count);
+int32_t sliding_window_slide(sliding_window_t window, int32_t element_count);
 
 /**
  * @brief Slide window shrink
@@ -153,7 +141,7 @@ int32_t sliding_window_slide_backward(sliding_window_t window, uint16_t element_
  * @return slide element count
  *         -1: error
  */
-int32_t sliding_window_slide_shrink(sliding_window_t window, int32_t element_count);
+int32_t sliding_window_shrink(sliding_window_t window, int32_t element_count);
 
 /**
  * @brief Slide window dilate
@@ -163,7 +151,7 @@ int32_t sliding_window_slide_shrink(sliding_window_t window, int32_t element_cou
  *                       negative: forward dilate
  *                       possitive: backward dilate
  */
-int32_t sliding_window_slide_dilate(sliding_window_t window, int32_t element_count);
+int32_t sliding_window_dilate(sliding_window_t window, int32_t element_count);
 
 
 #ifdef __cplusplus
