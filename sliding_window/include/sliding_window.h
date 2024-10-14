@@ -11,6 +11,7 @@ typedef struct sliding_window_handle
 {
     uint8_t *buffer;
     uint16_t buffer_size;
+    uint16_t vailed_size;
 
     uint8_t  elememt_size;
 
@@ -38,6 +39,9 @@ typedef struct sliding_window_handle
  *           then, actual data number is element_count.
  */
 void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_size, uint8_t element_size);
+
+
+int32_t sliding_window_size(sliding_window_t window);
 
 int32_t sliding_window_count(sliding_window_t window);
 
@@ -81,6 +85,9 @@ int32_t sliding_window_cache_count(sliding_window_t window);
  *         -1: error
  */
 int32_t sliding_window_await_count(sliding_window_t window);
+
+
+int32_t sliding_window_valid_count(sliding_window_t window);
 
 /**
  * @brief Write element to sliding window
@@ -152,6 +159,17 @@ int32_t sliding_window_shrink(sliding_window_t window, int32_t element_count);
  *                       possitive: backward dilate
  */
 int32_t sliding_window_dilate(sliding_window_t window, int32_t element_count);
+
+/**
+ * @brief Reset sliding window active window size
+ * 
+ * @param window: sliding window handle
+ * @param element_count: element count to reset
+ */
+int32_t sliding_window_active_reset(sliding_window_t window, uint16_t element_count);
+
+
+int32_t sliding_window_valid_reset(sliding_window_t window, uint16_t element_count);
 
 
 #ifdef __cplusplus
