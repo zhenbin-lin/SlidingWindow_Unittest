@@ -6,20 +6,21 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct sliding_window_handle 
 {
     uint8_t *buffer;
     uint16_t buffer_size;
-    uint16_t vailed_size;
 
     uint8_t  elememt_size;
+    uint8_t  is_tx_window;
 
     uint16_t read_index;
     uint16_t write_index;
 
-    uint16_t  front_index;  // front boundary
-    uint16_t  back_index;   // back boundary
+    uint16_t front_index;  // front boundary
+    uint16_t back_index;   // back boundary
 } sliding_window, *sliding_window_t;
 
 /**
@@ -29,6 +30,7 @@ typedef struct sliding_window_handle
  * @param buffer: buffer to store elements
  * @param buffer_size: buffer size
  * @param element_size: element size
+ * @param is_tx_window: if true, sliding window is tx mode, otherwise, rx mode
  *
  * @return void
  *
@@ -38,12 +40,10 @@ typedef struct sliding_window_handle
  *       eg: uint8_t sliding_window_buffer[element_size * element_count + element_size]
  *           then, actual data number is element_count.
  */
-void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_size, uint8_t element_size);
+void sliding_window_init(sliding_window_t window, void *buffer, uint16_t buffer_size, uint8_t element_size, bool is_tx_window);
 
 
-int32_t sliding_window_size(sliding_window_t window);
-
-int32_t sliding_window_count(sliding_window_t window);
+int32_t sliding_window_data_count(sliding_window_t window);
 
 /**
  * @brief Get active(readable) element count
