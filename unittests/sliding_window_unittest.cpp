@@ -339,8 +339,8 @@ TEST(SlidingWindowTest, rx_window_write_test)
 
     EXPECT_EQ(sliding_window_data_count(&window), 0);
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
-    EXPECT_EQ(sliding_window_active_count(&window), 52);
-    EXPECT_EQ(sliding_window_await_count(&window), 0);
+    EXPECT_EQ(sliding_window_active_count(&window), 0);
+    EXPECT_EQ(sliding_window_await_count(&window), 52);
     EXPECT_EQ(sliding_window_available_count(&window), 11);
 
     EXPECT_EQ(sliding_window_write(&window, (uint8_t *) "Hello, World!", 13), 13);
@@ -356,16 +356,16 @@ TEST(SlidingWindowTest, rx_window_write_test)
     EXPECT_EQ(sliding_window_write(&window, (uint8_t *) "Hello, World!", 13), 13);
     EXPECT_EQ(sliding_window_data_count(&window), 52);
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
-    EXPECT_EQ(sliding_window_active_count(&window), 0);
-    EXPECT_EQ(sliding_window_await_count(&window), 52);
+    EXPECT_EQ(sliding_window_active_count(&window), 52);
+    EXPECT_EQ(sliding_window_await_count(&window), 0);
     EXPECT_EQ(sliding_window_available_count(&window), 11);
 
     EXPECT_EQ(sliding_window_slide(&window, 13), 13);
     EXPECT_EQ(sliding_window_slide(&window, 13), 13);
     EXPECT_EQ(sliding_window_data_count(&window), 52);
     EXPECT_EQ(sliding_window_cache_count(&window), 26);
-    EXPECT_EQ(sliding_window_active_count(&window), 0);
-    EXPECT_EQ(sliding_window_await_count(&window), 26);
+    EXPECT_EQ(sliding_window_active_count(&window), 26);
+    EXPECT_EQ(sliding_window_await_count(&window), 0);
     EXPECT_EQ(sliding_window_available_count(&window), 11);
     
     EXPECT_EQ(sliding_window_drop(&window, 13), 13);
@@ -373,8 +373,8 @@ TEST(SlidingWindowTest, rx_window_write_test)
     EXPECT_EQ(sliding_window_drop(&window, 13), 0);
     EXPECT_EQ(sliding_window_data_count(&window), 26);
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
-    EXPECT_EQ(sliding_window_active_count(&window), 0);
-    EXPECT_EQ(sliding_window_await_count(&window), 26);
+    EXPECT_EQ(sliding_window_active_count(&window), 26);
+    EXPECT_EQ(sliding_window_await_count(&window), 0);
     EXPECT_EQ(sliding_window_available_count(&window), 37);
     
     EXPECT_EQ(sliding_window_dilate(&window, 13), 13);
@@ -392,8 +392,8 @@ TEST(SlidingWindowTest, rx_window_write_test)
 
     EXPECT_EQ(sliding_window_data_count(&window), 26);
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
-    EXPECT_EQ(sliding_window_active_count(&window),24);
-    EXPECT_EQ(sliding_window_await_count(&window), 26);
+    EXPECT_EQ(sliding_window_active_count(&window),26);
+    EXPECT_EQ(sliding_window_await_count(&window), 24);
     EXPECT_EQ(sliding_window_available_count(&window), 13);
 
     EXPECT_EQ(sliding_window_dilate(&window, 13), 13);
@@ -403,8 +403,8 @@ TEST(SlidingWindowTest, rx_window_write_test)
 
     EXPECT_EQ(sliding_window_data_count(&window), 26);
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
-    EXPECT_EQ(sliding_window_active_count(&window),24);
-    EXPECT_EQ(sliding_window_await_count(&window), 26);
+    EXPECT_EQ(sliding_window_active_count(&window),26);
+    EXPECT_EQ(sliding_window_await_count(&window), 24);
     EXPECT_EQ(sliding_window_available_count(&window), 13);
 
     EXPECT_EQ(sliding_window_shrink(&window, -11), 11);
@@ -415,7 +415,7 @@ TEST(SlidingWindowTest, rx_window_write_test)
 
     EXPECT_EQ(sliding_window_data_count(&window), 26);
     EXPECT_EQ(sliding_window_cache_count(&window), 0);
-    EXPECT_EQ(sliding_window_active_count(&window),13);
-    EXPECT_EQ(sliding_window_await_count(&window), 26);
+    EXPECT_EQ(sliding_window_active_count(&window),26);
+    EXPECT_EQ(sliding_window_await_count(&window), 13);
     EXPECT_EQ(sliding_window_available_count(&window), 24);
 }
