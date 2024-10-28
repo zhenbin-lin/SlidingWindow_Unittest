@@ -5,7 +5,7 @@ add_executable(sliding_window_unittest
 )
 
 target_link_libraries(sliding_window_unittest PRIVATE
-    sliding_window
+    SlidingWindow
     GTest::gtest_main
     slidingwindow_compiler_flags
 )
